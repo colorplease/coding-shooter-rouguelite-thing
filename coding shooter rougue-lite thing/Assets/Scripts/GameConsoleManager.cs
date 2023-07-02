@@ -5,10 +5,19 @@ using TMPro;
 
 public class GameConsoleManager : MonoBehaviour
 {
-    [SerializeField]TextMeshProUGUI[] codeLines;
-    [SerializeField]float codeLinesLength;
+    [Header("Code Stuff")]
+    [SerializeField]List<TextMeshProUGUI> codeLines;
+    [SerializeField]TextMeshProUGUI[] codeLinesArray;
+
+    [SerializeField]GameObject[] codeLinesLineGameObject;
+    [SerializeField]List<GameObject> codeLinesGameObjectArrayList;
+    [SerializeField]TextMeshProUGUI[] currentCodeLineSearch;
+    [SerializeField]List<TextMeshProUGUI> currentLine;
+
+    [SerializeField]float highestID;
+    [SerializeField]float lowestID;
     [Header("Player Modifiable Variables")]
-    public int a;
+    public float aVar;
     [Header("Code Type Colors")]
     public Color varColor;
     public Color numColor;
@@ -36,14 +45,110 @@ public class GameConsoleManager : MonoBehaviour
 
     void CompileCode()
     {
-        print("Code Compiled!");
-        GameObject[] codeLinesGameObjects = GameObject.FindGameObjectsWithTag("CodeLine");
-
-        for(int i=0;i<codeLinesGameObjects.Length;i++)
+        codeLines.Clear();
+        //gets all code objects
+        foreach(GameObject variable in GameObject.FindGameObjectsWithTag("var"))
         {
-            codeLinesLength += codeLinesGameObjects[i].transform.childCount;
+            codeLines.Add(variable.GetComponent<TextMeshProUGUI>());
         }
-        codeLinesLength += codeLinesGameObjects.Length;
-        //for()
+        foreach(GameObject variable in GameObject.FindGameObjectsWithTag("num"))
+        {
+            codeLines.Add(variable.GetComponent<TextMeshProUGUI>());
+        }
+        foreach(GameObject variable in GameObject.FindGameObjectsWithTag("operator"))
+        {
+            codeLines.Add(variable.GetComponent<TextMeshProUGUI>());
+        }
+        foreach(GameObject variable in GameObject.FindGameObjectsWithTag("end"))
+        {
+            codeLines.Add(variable.GetComponent<TextMeshProUGUI>());
+        }
+        foreach(GameObject variable in GameObject.FindGameObjectsWithTag("CodeLine"))
+        {
+            codeLines.Add(variable.GetComponent<TextMeshProUGUI>());
+        }
+        //set list to array
+        codeLinesArray = codeLines.ToArray();
+        lowestID = codeLinesArray[0].GetComponent<CodeObject>().id;
+        highestID = codeLinesArray[codeLinesArray.Length - 1].GetComponent<CodeObject>().id;
+        GameObject[] codeLinesLineGameObjectArray = GameObject.FindGameObjectsWithTag("CodeLine");
+        codeLinesGameObjectArrayList.Clear();
+        for(int i=0; i<codeLinesLineGameObjectArray.Length; i++)
+        {
+            for(int e=0; e<codeLinesLineGameObjectArray[i].transform.childCount; e++)
+            {
+                codeLinesGameObjectArrayList.Add(codeLinesLineGameObjectArray[i].transform.GetChild(e).gameObject);
+            }
+        }
+        codeLinesLineGameObject = codeLinesGameObjectArrayList.ToArray();
+        EvaluateLine();
+        //add colors
+        for(int i=0;i<codeLinesArray.Length;i++)
+        {
+            
+            switch(codeLinesArray[i].transform.tag)
+            {
+                case "num":
+                codeLinesArray[i].color = numColor;
+                break;
+                case "var":
+                codeLinesArray[i].color = varColor;
+                break;
+                case "operator":
+                codeLinesArray[i].color = operatorColor;
+                break;
+            }
+        }
+        print("Code Compiled!");
+    }
+
+    void EvaluateLine()
+    {
+        float currentIDEval = lowestID;
+        while(currentIDEval <= highestID)
+        {
+            currentLine.Clear();
+            for(int i=0;i<codeLinesLineGameObject.Length;i++)
+            {
+                if(codeLinesLineGameObject[i].GetComponent<CodeObject>().id == currentIDEval)
+                {
+                    currentLine.Add(codeLinesLineGameObject[i].GetComponent<TextMeshProUGUI>());
+                }   
+            }
+            currentCodeLineSearch = currentLine.ToArray();
+            switch(currentCodeLineSearch[0].transform.tag)
+            {
+                case "var":
+                int i=0;
+                while(currentCodeLineSearch[i].text != ";")
+                {
+                    switch(currentCodeLineSearch[i+1].text)
+                    {
+                        case "=":
+                        float number;
+                        if(float.TryParse(currentCodeLineSearch[i+2].text, out number))
+                        {
+                            
+                            switch(currentCodeLineSearch[i].text)
+                            {
+                                case "a":
+                                print(number);
+                                aVar = number;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogError("bro wtf r u doing");
+                        }
+                        break;
+                    }
+                    i++;
+                }
+                break;
+            }
+            currentIDEval++;
+        }
+        
     }
 }
