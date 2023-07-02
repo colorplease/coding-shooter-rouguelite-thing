@@ -119,32 +119,31 @@ public class GameConsoleManager : MonoBehaviour
             switch(currentCodeLineSearch[0].transform.tag)
             {
                 case "var":
-                int i=0;
-                while(currentCodeLineSearch[i].text != ";")
-                {
-                    switch(currentCodeLineSearch[i+1].text)
+                    for(int i=1; i<currentCodeLineSearch.Length; i+=2)
                     {
-                        case "=":
-                        float number;
-                        if(float.TryParse(currentCodeLineSearch[i+2].text, out number))
+                        switch(currentCodeLineSearch[i].text)
                         {
-                            
-                            switch(currentCodeLineSearch[i].text)
+                        
+                            case "=":
+                            float number;
+                            if(float.TryParse(currentCodeLineSearch[i+1].text, out number))
                             {
-                                case "a":
-                                print(number);
-                                aVar = number;
-                                break;
+                            
+                                switch(currentCodeLineSearch[0].text)
+                                {
+                                    case "a":
+                                    //print(number);
+                                    aVar = number;
+                                    break;
+                                }
                             }
-                        }
-                        else
-                        {
-                            Debug.LogError("bro wtf r u doing");
-                        }
+                            else
+                            {
+                                Debug.LogError("bro wtf r u doing");
+                            }
                         break;
                     }
-                    i++;
-                }
+                    }
                 break;
             }
             currentIDEval++;
