@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: d03826afcc8ae3d4fbe5f7042b6b98fd
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - scientifica
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d77b4031f7501ee4387afe3e7299e9e3, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
