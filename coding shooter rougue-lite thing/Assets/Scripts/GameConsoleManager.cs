@@ -77,7 +77,10 @@ public class GameConsoleManager : MonoBehaviour
         {
             for(int e=0; e<codeLinesLineGameObjectArray[i].transform.childCount; e++)
             {
-                codeLinesGameObjectArrayList.Add(codeLinesLineGameObjectArray[i].transform.GetChild(e).gameObject);
+                if(codeLinesLineGameObjectArray[i].GetComponent<TextMeshProUGUI>() != null)
+                {
+                    codeLinesGameObjectArrayList.Add(codeLinesLineGameObjectArray[i].transform.GetChild(e).gameObject);
+                }
             }
         }
         codeLinesLineGameObject = codeLinesGameObjectArrayList.ToArray();
@@ -116,7 +119,7 @@ public class GameConsoleManager : MonoBehaviour
                 }   
             }
             currentCodeLineSearch = currentLine.ToArray();
-            switch(currentCodeLineSearch[0].transform.tag)
+            switch(currentCodeLineSearch[0].transform.tag) 
             {
                 case "var":
                     for(int i=1; i<currentCodeLineSearch.Length; i+=2)
@@ -139,7 +142,7 @@ public class GameConsoleManager : MonoBehaviour
                             }
                             else
                             {
-                                Debug.LogError("bro wtf r u doing");
+                                ErrorFound("Data Type Mismatch! (a must be a number value)");
                             }
                         break;
                     }
@@ -149,5 +152,10 @@ public class GameConsoleManager : MonoBehaviour
             currentIDEval++;
         }
         
+    }
+
+    void ErrorFound(string errorMessage)
+    {
+        Debug.LogError(errorMessage);
     }
 }

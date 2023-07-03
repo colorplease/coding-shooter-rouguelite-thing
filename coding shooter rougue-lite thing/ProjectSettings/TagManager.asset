@@ -9,6 +9,7 @@ TagManager:
   - operator
   - num
   - end
+  - space
   layers:
   - Default
   - TransparentFX
